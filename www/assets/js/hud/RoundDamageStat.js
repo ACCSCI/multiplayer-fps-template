@@ -1,54 +1,58 @@
-import {ColorNames} from "../Enums.js";
+import { ColorNames } from "../Enums.js";
 
 export class RoundDamageStat {
-    #element
+    #element;
 
     constructor(element) {
-        this.#element = element
+        this.#element = element;
     }
 
     update(damage, enemyPlayers) {
         if (damage === null || !enemyPlayers.length) {
-            this.#element.innerHTML = ''
-            return
+            this.#element.innerHTML = "";
+            return;
         }
 
-        let id, count, sum, deadPlayers = [], alivePlayers = []
+        let id,
+            count,
+            sum,
+            deadPlayers = [],
+            alivePlayers = [];
         enemyPlayers.forEach((player) => {
-            id = player.getId()
-            let data = {
+            id = player.getId();
+            const data = {
                 name: ColorNames[player.getColorIndex()],
                 health: player.data.health,
                 damageDid: 0,
                 damageGot: 0,
-            }
+            };
             if (damage.did[id]) {
-                count = damage.did[id].length
-                sum = damage.did[id].reduce((acc, val) => acc += val)
-                data.damageDid = `${sum} in ${count}`
+                count = damage.did[id].length;
+                sum = damage.did[id].reduce((acc, val) => (acc += val));
+                data.damageDid = `${sum} in ${count}`;
             }
             if (damage.got[id]) {
-                count = damage.got[id].length
-                sum = damage.got[id].reduce((acc, val) => acc += val)
-                data.damageGot = `${sum} in ${count}`
+                count = damage.got[id].length;
+                sum = damage.got[id].reduce((acc, val) => (acc += val));
+                data.damageGot = `${sum} in ${count}`;
             }
 
             if (player.isAlive()) {
-                alivePlayers.push(data)
+                alivePlayers.push(data);
             } else {
-                deadPlayers.push(data)
+                deadPlayers.push(data);
             }
-        })
+        });
 
-        let html = ''
-        ;[...alivePlayers, ...deadPlayers].forEach((row) => {
+        let html = "";
+        [...alivePlayers, ...deadPlayers].forEach((row) => {
             html += `<tr>
                 <td>${row.name} (${row.health} hp)</td>
-                <td${row.damageDid === 0 ? '' : ' class="highlight"'}>${row.damageDid}</td>
-                <td${row.damageGot === 0 ? '' : ' class="highlight"'}>${row.damageGot}</td>
+                <td${row.damageDid === 0 ? "" : ' class="highlight"'}>${row.damageDid}</td>
+                <td${row.damageGot === 0 ? "" : ' class="highlight"'}>${row.damageGot}</td>
             </tr>
-            `
-        })
+            `;
+        });
 
         this.#element.innerHTML = `<table>
             <tr>
@@ -58,7 +62,6 @@ export class RoundDamageStat {
             </tr>
             ${html}
         </table>
-        `
+        `;
     }
-
 }

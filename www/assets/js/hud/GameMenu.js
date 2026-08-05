@@ -1,12 +1,12 @@
 export class GameMenu {
-    #setting
-    #hud
-    #element
+    #setting;
+    #hud;
+    #element;
 
     constructor(element, setting, hud) {
-        this.#setting = setting
-        this.#hud = hud
-        this.#init(element)
+        this.#setting = setting;
+        this.#hud = hud;
+        this.#init(element);
     }
 
     #init(element) {
@@ -22,31 +22,37 @@ export class GameMenu {
                 <button data-close>Close</button>
             </div>
         `;
-        this.#element = element.querySelector('[data-setting]')
-        element.addEventListener('keydown', (e) => e.target.matches('input,textarea') && e.stopPropagation())
-        element.addEventListener('keyup', (e) => e.target.matches('input,textarea') && e.stopPropagation())
-        element.querySelector('[data-save]').addEventListener('click', () => this.#saveSetting())
-        element.querySelector('[data-close]').addEventListener('click', () => this.#hud.toggleGameMenu())
+        this.#element = element.querySelector("[data-setting]");
+        element.addEventListener("keydown", (e) => e.target.matches("input,textarea") && e.stopPropagation());
+        element.addEventListener("keyup", (e) => e.target.matches("input,textarea") && e.stopPropagation());
+        element.querySelector("[data-save]").addEventListener("click", () => this.#saveSetting());
+        element.querySelector("[data-close]").addEventListener("click", () => this.#hud.toggleGameMenu());
     }
 
     #saveSetting() {
-        const setting = this.#setting
-        setting.update('sensitivity', parseFloat(this.#element.querySelector('input[name="sensitivity"]').value))
-        setting.update('inScopeSensitivity', parseFloat(this.#element.querySelector('input[name="sensitivity-scope"]').value))
-        setting.update('radarZoom', parseFloat(this.#element.querySelector('input[name="radar-zoom"]').value))
-        setting.update('volume', parseFloat(this.#element.querySelector('input[name="volume"]').value))
-        setting.update('crosshairColor', '' + this.#element.querySelector('input[name="crosshair-color"]').value)
-        setting.update('crosshairSize', parseInt(this.#element.querySelector('input[name="crosshair-size"]').value))
-        setting.update('hudColor', '' + this.#element.querySelector('input[name="hud-color"]').value)
-        setting.update('hudColorShadow', '' + this.#element.querySelector('input[name="hud-color-shadow"]').value)
+        const setting = this.#setting;
+        setting.update("sensitivity", parseFloat(this.#element.querySelector('input[name="sensitivity"]').value));
+        setting.update(
+            "inScopeSensitivity",
+            parseFloat(this.#element.querySelector('input[name="sensitivity-scope"]').value),
+        );
+        setting.update("radarZoom", parseFloat(this.#element.querySelector('input[name="radar-zoom"]').value));
+        setting.update("volume", parseFloat(this.#element.querySelector('input[name="volume"]').value));
+        setting.update("crosshairColor", `${this.#element.querySelector('input[name="crosshair-color"]').value}`);
+        setting.update(
+            "crosshairSize",
+            parseInt(this.#element.querySelector('input[name="crosshair-size"]').value, 10),
+        );
+        setting.update("hudColor", `${this.#element.querySelector('input[name="hud-color"]').value}`);
+        setting.update("hudColorShadow", `${this.#element.querySelector('input[name="hud-color-shadow"]').value}`);
 
-        const json = setting.getJson()
-        setting.loadSettings(json)
-        window.localStorage.setItem('setting', json)
+        const json = setting.getJson();
+        setting.loadSettings(json);
+        window.localStorage.setItem("setting", json);
     }
 
     show() {
-        if (this.#element.innerHTML !== '') {
+        if (this.#element.innerHTML !== "") {
             return;
         }
 
@@ -95,7 +101,6 @@ export class GameMenu {
     }
 
     close() {
-        this.#element.innerHTML = ''
+        this.#element.innerHTML = "";
     }
-
 }

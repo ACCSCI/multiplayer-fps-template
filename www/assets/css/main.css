@@ -1,8 +1,11 @@
-*, ::after, ::before {
+*,
+::after,
+::before {
     box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
     font-size: 20px;
     margin: 0;
     padding: 0;
@@ -18,7 +21,8 @@ progress {
     display: block;
 }
 
-#hud, #ui {
+#hud,
+#ui {
     position: absolute;
     left: 0;
     top: 0;
@@ -51,10 +55,11 @@ footer a:hover {
     color: #a46464;
 }
 
-h1, h2 {
+h1,
+h2 {
     font-size: 4rem;
     color: #e3e3e3;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     font-weight: bolder;
     font-style: italic;
     letter-spacing: 8px;
@@ -71,7 +76,7 @@ h2 {
 
 .emojis {
     padding: 0 10px 0 4px;
-    font-size: 74%
+    font-size: 74%;
 }
 
 .text-danger {
@@ -83,7 +88,7 @@ h2 {
 }
 
 #ui {
-    background: rgba(0, 0, 0, .2) url("../../resources/img/locker_room.jpg") center center;
+    background: rgba(0, 0, 0, 0.2) url("../../resources/img/locker_room.jpg") center center;
     background-size: cover;
     box-shadow: inset 0 0 50px #000000;
 }
@@ -118,7 +123,7 @@ button:hover {
 }
 
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 textarea {
@@ -153,7 +158,7 @@ textarea {
 }
 
 .flex {
-    display: flex !important;
+    display: flex;
 }
 
 .row::after {

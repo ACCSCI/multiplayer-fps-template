@@ -1,0 +1,24 @@
+{
+    "name": "counter-strike-football",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "description": "Competitive multiplayer FPS game - Counter-Strike: Football on VibeHub",
+    "scripts": {
+        "dev": "bun run scripts/dev-server.ts",
+        "test": "bun test",
+        "lint": "bunx biome check .",
+        "fmt": "bunx biome check --write .",
+        "check:lines": "bun run scripts/check-lines.ts"
+    },
+    "lint-staged": {
+        "*.{js,ts,mjs}": [
+            "bunx biome check --write"
+        ]
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.7",
+        "lefthook": "^2.1.10",
+        "lint-staged": "^17.3.0"
+    }
+}

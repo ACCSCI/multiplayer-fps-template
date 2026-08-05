@@ -14,7 +14,7 @@
     --color-me-hsl: 84, 64%, 64%;
     --color-opponent: #de6868;
     --color-opponent-hsl: 0, 64%, 64%;
-    --flash-bang-color: #FFFFFF;
+    --flash-bang-color: #ffffff;
     --scope-size: 2px;
     --hud-color: #ff8e8e;
     --hud-color-shadow: #626262;
@@ -56,7 +56,9 @@
     aspect-ratio: 1;
     border-radius: 50%;
     margin: auto auto;
-    box-shadow: 0 0 0 9999px #000, rgba(0, 0, 0, 0.5) 0 0 10px 4px inset;
+    box-shadow:
+        0 0 0 9999px #000,
+        rgba(0, 0, 0, 0.5) 0 0 10px 4px inset;
     opacity: 0;
 }
 
@@ -113,7 +115,8 @@
     height: 100%;
 }
 
-#hud .left, #hud .right {
+#hud .left,
+#hud .right {
     width: 30%;
     min-width: 250px;
     display: flex;
@@ -154,29 +157,9 @@
     text-shadow: none;
 }
 
-#hud #buy-menu, #hud #game-menu {
+#hud #buy-menu,
+#hud #game-menu {
     pointer-events: initial;
-}
-
-#hud #game-menu div[data-setting] > div.row > div {
-    float: left;
-    width: 50%;
-    padding: 16px 10px 4px 10px;
-}
-
-#hud #game-menu div[data-setting] > div.row > div p {
-    padding: 0;
-    margin: 0;
-}
-
-#hud #game-menu div[data-setting] input {
-    display: block;
-    width: 100%;
-    padding: 4px 10px;
-}
-
-#hud #game-menu button {
-    font-size: 1rem;
 }
 
 #hud #buy-menu p.disabled {
@@ -200,11 +183,6 @@
     content: "";
     clear: both;
     display: table;
-}
-
-#hud #buy-menu .menu-grenades > p {
-    float: left;
-    padding: 0px 12px;
 }
 
 #hud #buy-menu a {
@@ -234,23 +212,16 @@
     padding-top: 22px;
 }
 
-#hud #scoreboard .score-my p,
-#hud #scoreboard .score-opponent p {
-    font-size: 14px;
-    text-align: center;
-    margin-top: 0;
-}
-
 #hud #scoreboard table thead {
     text-align: center;
 }
 
 #hud #scoreboard table.player-stats.team-my tbody tr {
-    background-color: hsla(var(--color-me-hsl), .4);
+    background-color: hsla(var(--color-me-hsl), 0.4);
 }
 
 #hud #scoreboard table.player-stats.team-other tbody tr {
-    background-color: hsla(var(--color-opponent-hsl), .4);
+    background-color: hsla(var(--color-opponent-hsl), 0.4);
 }
 
 #hud #scoreboard table.player-stats tr:hover {
@@ -259,60 +230,6 @@
 
 #hud #scoreboard table.player-stats tbody tr.player-dead {
     background-color: rgba(232, 11, 11, 0.45);
-}
-
-#hud #scoreboard .rounds-history {
-    height: 40px;
-    clear: both;
-    padding: 4px;
-    margin: 12px 10px;
-}
-
-#hud #scoreboard .rounds-history .round-number {
-    width: 20px;
-    height: 20px;
-    float: left;
-    position: relative;
-    margin: 0 2px;
-    text-align: center;
-}
-
-#hud #scoreboard .rounds-history .round-number div {
-    font-size: 12px;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-}
-
-#hud #scoreboard .rounds-history .round-number span {
-    border: 0px solid transparent;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(222, 209, 209, 0.2);
-}
-
-#hud #scoreboard .rounds-history .round-number span.round-win-0 {
-    color: var(--color-defenders);
-    border-color: var(--color-defenders);
-}
-
-#hud #scoreboard .rounds-history .round-number span.round-win-1 {
-    color: var(--color-attackers);
-    border-color: var(--color-attackers);
-}
-
-#hud #scoreboard .rounds-history .round-number span.round-win-my-team {
-    top: -10px;
-    border-bottom-width: 2px;
-}
-
-#hud #scoreboard .rounds-history .round-number span.round-win-other-team {
-    top: 10px;
-    border-top-width: 2px;
 }
 
 #hud #radar {
@@ -378,7 +295,7 @@
 }
 
 #hud .health {
-    padding: .6rem .8rem;
+    padding: 0.6rem 0.8rem;
     max-width: 250px;
 }
 
@@ -394,7 +311,7 @@
 
 #hud .money {
     display: inline;
-    padding: .2rem .4rem;
+    padding: 0.2rem 0.4rem;
     font-weight: bold;
 }
 
@@ -408,7 +325,8 @@
     padding-top: 2px;
 }
 
-#hud .team-me-alive, #hud .team-opponent-alive {
+#hud .team-me-alive,
+#hud .team-opponent-alive {
     width: 50px;
     line-height: 60px;
     font-size: 1.4rem;
@@ -476,11 +394,6 @@
     opacity: 0.8;
 }
 
-#hud #mode-spectate span {
-    font-weight: bolder;
-    font-size: 130%;
-}
-
 #hud .ammo {
     display: inline;
     padding: 4px 8px;
@@ -490,10 +403,6 @@
     margin-top: auto;
     margin-bottom: 1rem;
     font-size: 150%;
-}
-
-#hud .inventory .grenades span {
-    padding: 8px;
 }
 
 #hud .inventory .grenades span > span.count {
@@ -531,10 +440,19 @@
     vertical-align: middle;
 }
 
+#hud .inventory .grenades span {
+    padding: 8px;
+}
+
 #hud .kill-feed > p.highlight > span {
     font-weight: bold;
     border-color: #db0101;
     background: rgba(41, 37, 37, 0.7);
+}
+
+#hud #mode-spectate span {
+    font-weight: bolder;
+    font-size: 130%;
 }
 
 #hud .kill-feed span.team-me {
@@ -545,3 +463,89 @@
     color: var(--color-opponent);
 }
 
+#hud #scoreboard .score-my p,
+#hud #scoreboard .score-opponent p {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 0;
+}
+
+#hud #buy-menu .menu-grenades > p {
+    float: left;
+    padding: 0px 12px;
+}
+
+#hud #scoreboard .rounds-history {
+    height: 40px;
+    clear: both;
+    padding: 4px;
+    margin: 12px 10px;
+}
+
+#hud #scoreboard .rounds-history .round-number {
+    width: 20px;
+    height: 20px;
+    float: left;
+    position: relative;
+    margin: 0 2px;
+    text-align: center;
+}
+
+#hud #scoreboard .rounds-history .round-number div {
+    font-size: 12px;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+}
+
+#hud #scoreboard .rounds-history .round-number span {
+    border: 0px solid transparent;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(222, 209, 209, 0.2);
+}
+
+#hud #scoreboard .rounds-history .round-number span.round-win-0 {
+    color: var(--color-defenders);
+    border-color: var(--color-defenders);
+}
+
+#hud #scoreboard .rounds-history .round-number span.round-win-1 {
+    color: var(--color-attackers);
+    border-color: var(--color-attackers);
+}
+
+#hud #scoreboard .rounds-history .round-number span.round-win-my-team {
+    top: -10px;
+    border-bottom-width: 2px;
+}
+
+#hud #scoreboard .rounds-history .round-number span.round-win-other-team {
+    top: 10px;
+    border-top-width: 2px;
+}
+
+#hud #game-menu div[data-setting] > div.row > div {
+    float: left;
+    width: 50%;
+    padding: 16px 10px 4px 10px;
+}
+
+#hud #game-menu div[data-setting] p {
+    padding: 0;
+    margin: 0;
+}
+
+#hud #game-menu div[data-setting] input {
+    display: block;
+    width: 100%;
+    padding: 4px 10px;
+}
+
+#hud #game-menu button {
+    font-size: 1rem;
+}

@@ -1,57 +1,61 @@
-import {ItemId, ItemIdToIcon} from "../Enums.js";
+import { ItemId, ItemIdToIcon } from "../Enums.js";
 
 export class KillFeed {
-    #element
-    #scoreBoard
+    #element;
+    #scoreBoard;
 
     constructor(scoreBoard, killFeedElement) {
-        this.#scoreBoard = scoreBoard
-        this.#element = killFeedElement
+        this.#scoreBoard = scoreBoard;
+        this.#element = killFeedElement;
     }
 
     showKill(playerCulprit, playerDead, wasHeadshot, playerMe, killedItemId) {
-        let killedByBomb = false
-        this.#scoreBoard.updatePlayerIsDead(playerDead)
-        if (playerCulprit.id === playerDead.id) { // suicide
+        let killedByBomb = false;
+        this.#scoreBoard.updatePlayerIsDead(playerDead);
+        if (playerCulprit.id === playerDead.id) {
+            // suicide
             if (killedItemId === ItemId.SolidSurface) {
-                this.#scoreBoard.updatePlayerKills(playerDead, -1)
+                this.#scoreBoard.updatePlayerKills(playerDead, -1);
             } else if (killedItemId === ItemId.Bomb) {
-                killedByBomb = true
+                killedByBomb = true;
             }
-        } else if (playerCulprit.isAttacker === playerDead.isAttacker) { // team kill
-            this.#scoreBoard.updatePlayerKills(playerCulprit, -1)
+        } else if (playerCulprit.isAttacker === playerDead.isAttacker) {
+            // team kill
+            this.#scoreBoard.updatePlayerKills(playerCulprit, -1);
         } else {
-            this.#scoreBoard.updatePlayerKills(playerCulprit, 1)
+            this.#scoreBoard.updatePlayerKills(playerCulprit, 1);
         }
 
-        const culprit = document.createElement('span')
-        const culpritOnMyTeam = (playerCulprit.isAttacker === playerMe.isAttacker)
-        culprit.classList.add(culpritOnMyTeam ? 'team-me' : 'team-opponent')
-        culprit.innerText = killedByBomb ? ItemIdToIcon[ItemId.Bomb] : this.#scoreBoard.getPlayerName(playerCulprit, playerMe)
+        const culprit = document.createElement("span");
+        const culpritOnMyTeam = playerCulprit.isAttacker === playerMe.isAttacker;
+        culprit.classList.add(culpritOnMyTeam ? "team-me" : "team-opponent");
+        culprit.innerText = killedByBomb
+            ? ItemIdToIcon[ItemId.Bomb]
+            : this.#scoreBoard.getPlayerName(playerCulprit, playerMe);
 
-        const dead = document.createElement('span')
-        const deadOnyMyTeam = (playerDead.isAttacker === playerMe.isAttacker)
-        dead.classList.add(deadOnyMyTeam ? 'team-me' : 'team-opponent')
-        dead.innerText = this.#scoreBoard.getPlayerName(playerDead, playerMe)
+        const dead = document.createElement("span");
+        const deadOnyMyTeam = playerDead.isAttacker === playerMe.isAttacker;
+        dead.classList.add(deadOnyMyTeam ? "team-me" : "team-opponent");
+        dead.innerText = this.#scoreBoard.getPlayerName(playerDead, playerMe);
 
-        const parentElement = this.#element
+        const parentElement = this.#element;
         if (parentElement.children.length > 4) {
-            parentElement.children[0].remove()
+            parentElement.children[0].remove();
         }
 
-        const row = document.createElement('p')
-        const line = document.createElement('span')
-        let shouldHighlight = (playerCulprit.id === playerMe.id || playerDead.id === playerMe.id)
+        const row = document.createElement("p");
+        const line = document.createElement("span");
+        const shouldHighlight = playerCulprit.id === playerMe.id || playerDead.id === playerMe.id;
         if (shouldHighlight) {
-            row.classList.add('highlight')
+            row.classList.add("highlight");
         }
-        let headshot = (wasHeadshot ? ' ⌖' : '')
-        line.append(culprit)
-        line.append(` ${ItemIdToIcon[killedItemId]}${headshot} `)
-        line.append(dead)
-        row.append(line)
-        parentElement.append(row)
+        const headshot = wasHeadshot ? " ⌖" : "";
+        line.append(culprit);
+        line.append(` ${ItemIdToIcon[killedItemId]}${headshot} `);
+        line.append(dead);
+        row.append(line);
+        parentElement.append(row);
 
-        setTimeout(() => row.remove(), 3000)
+        setTimeout(() => row.remove(), 3000);
     }
 }

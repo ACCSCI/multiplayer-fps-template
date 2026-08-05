@@ -1,21 +1,21 @@
 export {
-    EventList,
-    GameOverReason,
-    PauseReason,
-    Color,
-    ColorNames,
-    RoundEndReasonIcon,
-    SoundType,
+    Action,
     ArmorType,
     ArmorTypeIcon,
     BuyMenuItem,
+    Color,
+    ColorNames,
+    EventList,
+    GameOverReason,
+    GrenadeSlots,
     InventorySlot,
     ItemId,
-    ItemIdToName,
     ItemIdToIcon,
-    Action,
-    GrenadeSlots,
-}
+    ItemIdToName,
+    PauseReason,
+    RoundEndReasonIcon,
+    SoundType,
+};
 
 // server/src/Event/EventList.php
 const EventList = {
@@ -34,7 +34,7 @@ const EventList = {
     DropEvent: 12,
     GrillEvent: 13,
     SmokeEvent: 14,
-}
+};
 
 // server/src/Enum/GameOverReason.php
 const GameOverReason = {
@@ -45,7 +45,7 @@ const GameOverReason = {
     ATTACKERS_SURRENDER: 5,
     DEFENDERS_SURRENDER: 6,
     SERVER_ERROR: 9,
-}
+};
 
 // server/src/Enum/PauseReason.php
 const PauseReason = {
@@ -53,33 +53,33 @@ const PauseReason = {
     TIMEOUT_ATTACKERS: 2,
     TIMEOUT_DEFENDERS: 3,
     HALF_TIME: 4,
-}
+};
 
 // server/src/Enum/Color.php
 const Color = {
-    1: 0x0000FF,
-    2: 0x00FF00,
-    3: 0xFFFF00,
+    1: 0x0000ff,
+    2: 0x00ff00,
+    3: 0xffff00,
     4: 0x800080,
-    5: 0xFFA500,
-}
+    5: 0xffa500,
+};
 
 // server/src/Enum/Color.php
 const ColorNames = {
-    1: 'Blue',
-    2: 'Green',
-    3: 'Yellow',
-    4: 'Purple',
-    5: 'Orange',
-}
+    1: "Blue",
+    2: "Green",
+    3: "Yellow",
+    4: "Purple",
+    5: "Orange",
+};
 
 // server/src/Enum/RoundEndReason.php
 const RoundEndReasonIcon = {
-    0: '☠',
-    1: '⏱',
-    2: '✂',
-    3: '💣',
-}
+    0: "☠",
+    1: "⏱",
+    2: "✂",
+    3: "💣",
+};
 
 // server/src/Enum/SoundType.php
 const SoundType = {
@@ -109,21 +109,21 @@ const SoundType = {
     FLAME_PLAYER_HIT: 23,
     SMOKE_SPAWN: 24,
     SMOKE_FADE: 25,
-}
+};
 
 // server/src/Enum/ArmorType.php
 const ArmorType = {
     NONE: 0,
     BODY: 1,
     BODY_AND_HEAD: 2,
-}
+};
 
 // server/src/Enum/ArmorType.php
 const ArmorTypeIcon = {
-    0: '♢',
-    1: '\uE064',
-    2: '\uE065',
-}
+    0: "♢",
+    1: "\uE064",
+    2: "\uE065",
+};
 
 // server/src/Enum/BuyMenuItem.php
 const BuyMenuItem = {
@@ -142,7 +142,7 @@ const BuyMenuItem = {
     GRENADE_INCENDIARY: 13,
     DEFUSE_KIT: 14,
     RIFLE_AWP: 15,
-}
+};
 
 // server/src/Enum/InventorySlot.php
 const InventorySlot = {
@@ -158,7 +158,7 @@ const InventorySlot = {
     SLOT_TASER: 9,
     SLOT_KEVLAR: 10,
     SLOT_KIT: 11,
-}
+};
 
 // server/src/Enum/ItemId.php
 const ItemId = {
@@ -179,79 +179,82 @@ const ItemId = {
     Smoke: 36,
     Bomb: 50,
     DefuseKit: 51,
-}
+};
 
 const ItemIdToName = {
-    0: 'Wall',
-    1: 'Knife',
-    2: 'Glock',
-    3: 'P-250',
-    4: 'USP',
-    5: 'AK-47',
-    6: 'M4-A1',
-    7: 'AWP',
-    30: 'Decoy',
-    31: 'Flashbang',
-    32: 'High explosive',
-    33: 'Incendiary',
-    34: 'Kevlar',
-    35: 'Molotov',
-    36: 'Smoke',
-    50: 'Bomb',
-    51: 'Defuse Kit',
-}
+    0: "Wall",
+    1: "Knife",
+    2: "Glock",
+    3: "P-250",
+    4: "USP",
+    5: "AK-47",
+    6: "M4-A1",
+    7: "AWP",
+    30: "Decoy",
+    31: "Flashbang",
+    32: "High explosive",
+    33: "Incendiary",
+    34: "Kevlar",
+    35: "Molotov",
+    36: "Smoke",
+    50: "Bomb",
+    51: "Defuse Kit",
+};
 
 const ItemIdToIcon = {
-    0: '\uE000',
-    1: '\uE03B',
-    2: '\uE004',
-    3: '\uE013',
-    4: '\uE003',
-    5: '\uE007',
-    6: '\uE00E',
-    7: '\uE009',
-    30: '\uE02F',
-    31: '\uE02B',
-    32: '\uE02C',
-    33: '\uE030',
-    34: '\uE064',
-    35: '\uE02E',
-    36: '\uE02D',
-    50: '\uE031',
-    51: '\uE066',
-}
+    0: "\uE000",
+    1: "\uE03B",
+    2: "\uE004",
+    3: "\uE013",
+    4: "\uE003",
+    5: "\uE007",
+    6: "\uE00E",
+    7: "\uE009",
+    30: "\uE02F",
+    31: "\uE02B",
+    32: "\uE02C",
+    33: "\uE030",
+    34: "\uE064",
+    35: "\uE02E",
+    36: "\uE02D",
+    50: "\uE031",
+    51: "\uE066",
+};
 
 // PlayerAction.js
 const Action = {
-    MOVE_FORWARD: 'forward',
-    MOVE_LEFT: 'left',
-    MOVE_BACK: 'back',
-    MOVE_RIGHT: 'right',
-    JUMP: 'jump',
-    JUMP_THROW: 'jump_throw',
-    CROUCH: 'crouch',
-    WALK: 'walk',
-    RELOAD: 'reload',
-    EQUIP_KNIFE: 'equip_knife',
-    EQUIP_PRIMARY: 'equip_primary',
-    EQUIP_SECONDARY: 'equip_secondary',
-    EQUIP_BOMB: 'equip_bomb',
-    EQUIP_SMOKE: 'equip_smoke',
-    EQUIP_FLASH: 'equip_flash',
-    EQUIP_HE: 'equip_he',
-    EQUIP_MOLOTOV: 'equip_molotov',
-    EQUIP_DECOY: 'equip_decoy',
-    BUY_MENU: 'buy_menu',
-    GAME_MENU: 'game_menu',
-    SCORE_BOARD: 'score_board',
-    DROP: 'drop',
-    DROP_BOMB: 'drop_bomb',
-    SWITCH_HANDS: 'switch_hands',
-    USE: 'use',
-    CLEAR_DECALS: 'clear_decals',
-}
+    MOVE_FORWARD: "forward",
+    MOVE_LEFT: "left",
+    MOVE_BACK: "back",
+    MOVE_RIGHT: "right",
+    JUMP: "jump",
+    JUMP_THROW: "jump_throw",
+    CROUCH: "crouch",
+    WALK: "walk",
+    RELOAD: "reload",
+    EQUIP_KNIFE: "equip_knife",
+    EQUIP_PRIMARY: "equip_primary",
+    EQUIP_SECONDARY: "equip_secondary",
+    EQUIP_BOMB: "equip_bomb",
+    EQUIP_SMOKE: "equip_smoke",
+    EQUIP_FLASH: "equip_flash",
+    EQUIP_HE: "equip_he",
+    EQUIP_MOLOTOV: "equip_molotov",
+    EQUIP_DECOY: "equip_decoy",
+    BUY_MENU: "buy_menu",
+    GAME_MENU: "game_menu",
+    SCORE_BOARD: "score_board",
+    DROP: "drop",
+    DROP_BOMB: "drop_bomb",
+    SWITCH_HANDS: "switch_hands",
+    USE: "use",
+    CLEAR_DECALS: "clear_decals",
+};
 
 const GrenadeSlots = [
-    InventorySlot.SLOT_GRENADE_SMOKE, InventorySlot.SLOT_GRENADE_MOLOTOV, InventorySlot.SLOT_GRENADE_HE,
-    InventorySlot.SLOT_GRENADE_FLASH, InventorySlot.SLOT_GRENADE_DECOY,
-]
+    InventorySlot.SLOT_GRENADE_SMOKE,
+    InventorySlot.SLOT_GRENADE_MOLOTOV,
+    InventorySlot.SLOT_GRENADE_HE,
+    InventorySlot.SLOT_GRENADE_FLASH,
+    InventorySlot.SLOT_GRENADE_DECOY,
+];

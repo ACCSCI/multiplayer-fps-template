@@ -1,4 +1,4 @@
-import {AnimationMixer, Vector3} from 'three'
+import { AnimationMixer, Vector3 } from "three";
 
 export class Player {
     data = {
@@ -27,127 +27,125 @@ export class Player {
         ammoReserve: null,
         isReloading: null,
         scopeLevel: null,
-    }
+    };
     #custom = {
         slotId: null,
         slots: null,
         crouchSight: null,
-    }
-    #animation = {}
-    #threeObject = null
+    };
+    #animation = {};
+    #threeObject = null;
 
     constructor(serverData, object3D) {
-        this.updateData(serverData)
-        this.#threeObject = object3D
+        this.updateData(serverData);
+        this.#threeObject = object3D;
     }
 
     set3DObject(object) {
-        this.#threeObject = object
+        this.#threeObject = object;
     }
 
     setAnimations(animations) {
         animations.forEach((clip) => {
-            const mixer = new AnimationMixer(this.#threeObject)
+            const mixer = new AnimationMixer(this.#threeObject);
             const action = mixer.clipAction(clip);
-            if (clip.name === 'crouch') {
-                action.play()
-                this.#animation.crouch = mixer
+            if (clip.name === "crouch") {
+                action.play();
+                this.#animation.crouch = mixer;
             }
-        })
+        });
     }
 
     equip(slotId) {
-        this.#custom.slotId = slotId
-        this.#custom.slots = JSON.stringify(this.data.slots)
+        this.#custom.slotId = slotId;
+        this.#custom.slots = JSON.stringify(this.data.slots);
     }
 
     updateData(serverData) {
-        this.data = serverData
+        this.data = serverData;
     }
 
     get3DObject() {
-        return this.#threeObject
+        return this.#threeObject;
     }
 
     animate() {
         if (this.#animation.crouch && this.data.sight !== this.#custom.crouchSight) {
-            this.#animation.crouch.setTime(this.data.sight + 9)
-            this.#custom.crouchSight = this.data.sight
+            this.#animation.crouch.setTime(this.data.sight + 9);
+            this.#custom.crouchSight = this.data.sight;
         }
     }
 
     getEquippedSlotId() {
-        return this.#custom.slotId
+        return this.#custom.slotId;
     }
 
     isInventoryChanged(serverState) {
-        return (this.getEquippedSlotId() !== serverState.item.slot || this.#custom.slots !== JSON.stringify(serverState.slots))
+        return (
+            this.getEquippedSlotId() !== serverState.item.slot ||
+            this.#custom.slots !== JSON.stringify(serverState.slots)
+        );
     }
 
     getTeamName() {
-        return (this.isAttacker() ? 'Attackers' : 'Defenders')
+        return this.isAttacker() ? "Attackers" : "Defenders";
     }
 
     getOtherTeamName() {
-        return (this.isAttacker() ? 'Defenders' : 'Attackers')
+        return this.isAttacker() ? "Defenders" : "Attackers";
     }
 
     getTeamIndex() {
-        return (this.data.isAttacker ? 1 : 0)
+        return this.data.isAttacker ? 1 : 0;
     }
 
     getOtherTeamIndex() {
-        return (this.data.isAttacker ? 0 : 1)
+        return this.data.isAttacker ? 0 : 1;
     }
 
     getId() {
         if (this.data.id === null) {
-            throw new Error("No ID set")
+            throw new Error("No ID set");
         }
-        return this.data.id
+        return this.data.id;
     }
 
     getSightPosition() {
         return {
-            "x": this.data.position.x,
-            "y": this.data.position.y + this.data.sight,
-            "z": this.data.position.z,
-        }
+            x: this.data.position.x,
+            y: this.data.position.y + this.data.sight,
+            z: this.data.position.z,
+        };
     }
 
     getSightPositionThreeVector() {
-        return new Vector3(
-            this.data.position.x,
-            this.data.position.y + this.data.sight,
-            -this.data.position.z,
-        )
+        return new Vector3(this.data.position.x, this.data.position.y + this.data.sight, -this.data.position.z);
     }
 
     getColorIndex() {
-        return this.data.color
+        return this.data.color;
     }
 
     isAttacker() {
-        return this.data.isAttacker
+        return this.data.isAttacker;
     }
 
     isAlive() {
-        return (this.data.health > 0)
+        return this.data.health > 0;
     }
 
     respawn() {
-        this.data.health = 100
-        this.get3DObject().visible = true
+        this.data.health = 100;
+        this.get3DObject().visible = true;
         this.#custom = {
             slotId: null,
             slots: null,
             crouchSight: null,
-        }
+        };
     }
 
     died() {
-        this.data.health = 0
-        this.get3DObject().visible = false
+        this.data.health = 0;
+        this.get3DObject().visible = false;
     }
-
 }

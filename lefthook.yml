@@ -1,0 +1,7 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint-staged:
+      run: bunx lint-staged
+    check-lines:
+      run: bun run scripts/check-lines.ts

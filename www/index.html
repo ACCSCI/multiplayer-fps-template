@@ -1,12 +1,14 @@
 <!Doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Counter-Strike: Football</title>
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/hud.css">
+    <link rel="stylesheet" href="./assets/css/vibehub.css">
+    <script src="https://vibe.lumigrav.space/sdk/beta/vibehub.js"></script>
 </head>
-<body oncontextmenu="return false" style="background:#000000">
+<body style="background:#000000">
 <div id="hud"><p style="font-size:120px;text-align:center;color:#FFF;padding:90px 40px">Loading....</p></div>
 <div id="ui">
     <header>
@@ -14,9 +16,14 @@
         <h2>F<span class="emojis">🏉💣</span>tball</h2>
     </header>
     <div id="menu">
-        <button onclick="showModal('modal-join')">Play</button>
-        <button onclick="showModal('modal-setting')">Settings</button>
-        <button onclick="window.close()">Quit</button>
+        <button type="button" onclick="gameUi.showModal('modal-join')">Play</button>
+        <button type="button" onclick="gameUi.showModal('modal-setting')">Settings</button>
+        <button type="button" onclick="window.close()">Quit</button>
+    </div>
+    <div id="account">
+        <span id="account-status">VibeHub: initializing...</span>
+        <button id="account-login" type="button" class="hidden">Login</button>
+        <button id="account-logout" type="button" class="hidden">Logout</button>
     </div>
     <footer>
         Created by <a target="_blank" href="https://github.com/solcloud">solcloud</a>
@@ -28,17 +35,17 @@
         <p class="text-warning">Currently, there is no official public server available, but you can run server yourself.</p>
         <textarea id="join-url">ws://localhost:8081?map=default&code=acode</textarea>
         <p class="flex">
-            <button onclick="closeModal()" class="btn">× Close</button>
+            <button type="button" onclick="gameUi.closeModal()" class="btn">× Close</button>
             <span>&nbsp;</span>
-            <button onclick="joinGameUrl(document.getElementById('join-url').value)" class="btn">↳ Join</button>
+            <button type="button" onclick="gameUi.joinGameUrl(document.getElementById('join-url').value)" class="btn">↳ Join</button>
         </p>
     </div>
     <div data-name="modal-setting" class="hidden">
         <textarea rows="8" id="setting-form"></textarea>
         <p class="flex">
-            <button onclick="closeModal()" class="btn">× Close</button>
+            <button type="button" onclick="gameUi.closeModal()" class="btn">× Close</button>
             <span>&nbsp;</span>
-            <button onclick="saveSetting(document.getElementById('setting-form').value);closeModal()" class="btn">✓ Save</button>
+            <button type="button" onclick="gameUi.saveSetting(document.getElementById('setting-form').value);gameUi.closeModal()" class="btn">✓ Save</button>
         </p>
     </div>
 </div>
@@ -72,42 +79,105 @@
     const ui = document.getElementById('ui')
     const hud = document.getElementById('hud')
 
-    function joinGameUrl(url) {
-        modal.remove()
-        ui.remove()
+    window.gameUi = {
+        joinGameUrl(url) {
+            modal.remove()
+            ui.remove()
 
-        console.log("Launching game")
-        import("./assets/js/start.js").then(async (ns) => {
-            await ns.launchGame(document.body, hud, localStorage.getItem('setting'), url)
-        }).catch((error) => {
-            console.log(error)
-            alert(error)
-        })
-    }
+            console.log("Launching game")
+            import("./assets/js/start.js").then(async (ns) => {
+                await ns.launchGame(document.body, hud, localStorage.getItem('setting'), url)
+            }).catch((error) => {
+                console.log(error)
+                alert(error)
+            })
+        },
+        saveSetting(json) {
+            localStorage.setItem('setting', json)
+        },
+        closeModal() {
+            modal.classList.add('hidden')
+            modal.querySelectorAll('[data-name]').forEach((el) => {
+                el.classList.add('hidden')
+            })
+        },
+        showModal(name) {
+            const menu = modal.querySelector(`[data-name="${name}"]`)
+            if (!menu) {
+                return false
+            }
 
-    function saveSetting(json) {
-        localStorage.setItem('setting', json)
-    }
-
-    function closeModal() {
-        modal.classList.add('hidden')
-        modal.querySelectorAll('[data-name]').forEach(function (el) {
-            el.classList.add('hidden')
-        })
-    }
-
-    function showModal(name) {
-        const menu = modal.querySelector(`[data-name="${name}"]`)
-        if (!menu) {
-            return false
-        }
-
-        modal.classList.remove('hidden')
-        menu.classList.remove('hidden')
+            modal.classList.remove('hidden')
+            menu.classList.remove('hidden')
+        },
     }
 
 </script>
+<script type="module">
+    import {VibeHubClient} from "./assets/js/vibehub/VibeHubClient.js";
+
+    const statusElement = document.getElementById('account-status')
+    const loginButton = document.getElementById('account-login')
+    const logoutButton = document.getElementById('account-logout')
+    const vibeClient = new VibeHubClient()
+    window.vibeClient = vibeClient
+
+    function renderAuth() {
+        const user = vibeClient.getUser()
+        if (vibeClient.isLoggedIn() && user) {
+            statusElement.textContent = `VibeHub: ${user.name}`
+            loginButton.classList.add('hidden')
+            logoutButton.classList.remove('hidden')
+        } else {
+            statusElement.textContent = 'VibeHub: not logged in'
+            loginButton.classList.remove('hidden')
+            logoutButton.classList.add('hidden')
+        }
+    }
+
+    function syncCloudSettings() {
+        return vibeClient.loadCloudSettings().then((cloud) => {
+            if (!cloud?.setting) {
+                return
+            }
+            const localRaw = localStorage.getItem('setting')
+            let localSavedAt = 0
+            if (localRaw) {
+                try {
+                    const local = JSON.parse(localRaw)
+                    localSavedAt = local.__savedAt ?? 0
+                } catch {
+                    // ignore malformed local settings
+                }
+            }
+            if (cloud.savedAt > localSavedAt) {
+                localStorage.setItem('setting', cloud.setting)
+                const form = document.getElementById('setting-form')
+                if (form) {
+                    form.value = cloud.setting
+                }
+                console.log('[VibeHub] settings synced from cloud')
+            }
+        })
+    }
+
+    vibeClient.init()
+        .then(() => renderAuth())
+        .catch((error) => {
+            console.warn(`[VibeHub] init failed: ${error}`)
+            statusElement.textContent = 'VibeHub: unavailable'
+        })
+    vibeClient.onAuthChange(() => renderAuth())
+
+    loginButton.addEventListener('click', () => {
+        vibeClient.login()
+            .then(() => syncCloudSettings())
+            .catch((error) => console.warn(`[VibeHub] login failed: ${error}`))
+    })
+    logoutButton.addEventListener('click', () => vibeClient.logout())
+</script>
 <script>
+    document.addEventListener('contextmenu', (e) => e.preventDefault())
     if (window.nodeApi) {
         document.getElementById('join-url').value = 'udp://localhost:8080?map=default&code=acode'
     } else {
@@ -117,7 +187,7 @@
         });
     }
     if (window.location.search === '?dev-join') {
-        joinGameUrl(document.getElementById('join-url').value)
+        window.gameUi.joinGameUrl(document.getElementById('join-url').value)
     }
 </script>
 </body>
