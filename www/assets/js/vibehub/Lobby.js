@@ -2,8 +2,6 @@
  * VibeHub 大厅:创建房间 / 房间列表 / 快速匹配 / 密码房 / 队伍等待。
  * 对局开始后由 onStart 回调交给游戏启动流程(SimHost + NetworkConnector)。
  */
-import { VibeHubClient } from "./VibeHubClient.js";
-
 const DEFAULT_MAX_PLAYERS = 10;
 const DEFAULT_MODE = "competitive";
 const ROOM_JOIN_OPTIONS = {
