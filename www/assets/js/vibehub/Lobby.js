@@ -50,6 +50,7 @@ export class Lobby {
             <button type="button" data-action="quick">Quick match</button>
             <div class="lobby-rooms" data-rooms></div>
             <div class="lobby-hint" data-hint>Rooms refresh on join/leave</div>
+            <div class="lobby-rooms" data-leaderboard></div>
         `;
         this.#container.querySelector('[data-action="create"]').addEventListener("click", () => this.createRoom());
         this.#container.querySelector('[data-action="quick"]').addEventListener("click", () => this.quickJoin());
@@ -59,6 +60,34 @@ export class Lobby {
                 this.joinRoom(button.dataset.join);
             }
         });
+        this.refreshLeaderboard();
+    }
+
+    /** 全服排行榜(vibe.global) */
+    async refreshLeaderboard() {
+        const element = this.#container.querySelector("[data-leaderboard]");
+        if (!element) {
+            return;
+        }
+        try {
+            const entries = await this.#vibeClient.loadLeaderboard();
+            if (entries.length === 0) {
+                element.innerHTML = '<div class="room-row">No leaderboard yet</div>';
+                return;
+            }
+            element.innerHTML = "";
+            for (const [index, entry] of entries.slice(0, 10).entries()) {
+                const row = document.createElement("div");
+                row.className = "room-row";
+                row.innerHTML = `
+                    <span>${index + 1}. ${escapeHtml(entry.name)}</span>
+                    <span>${entry.wins ?? 0} wins / ${entry.kills ?? 0} kills</span>
+                `;
+                element.appendChild(row);
+            }
+        } catch (error) {
+            console.warn(`[Lobby] leaderboard failed: ${error}`);
+        }
     }
 
     /** 房间列表渲染(登录玩家可看可进) */

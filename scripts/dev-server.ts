@@ -1,12 +1,13 @@
 /**
  * 本地静态服务器:发布前本地双窗口 E2E 用。
- * 启动: bun run dev  → http://localhost:8080/
+ * 启动: bun run dev  → http://localhost:8400/
+ * 注:8080 在部分 Windows(Hyper-V/WSL)端口排除段内,默认用 8400。
  */
 
 import { readFile } from "node:fs/promises";
 import { join, normalize, resolve } from "node:path";
 
-const PORT = Number(process.env.PORT ?? 8080);
+const PORT = Number(process.env.PORT ?? 8400);
 const ROOT = resolve(import.meta.dir, "..", "www");
 
 const MIME: Record<string, string> = {
@@ -34,7 +35,7 @@ Bun.serve({
     async fetch(request) {
         const url = new URL(request.url);
         let path = normalize(decodeURIComponent(url.pathname));
-        if (path.endsWith("/")) {
+        if (path === "\\" || path.endsWith("/") || path.endsWith("\\")) {
             path += "index.html";
         }
         const filePath = join(ROOT, path);

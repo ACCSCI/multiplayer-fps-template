@@ -65,6 +65,7 @@ export function buildMapFromJson(json) {
         ],
         generateNavigationMeshKey: (tileSize, colliderHeight) => `${tileSize}-${colliderHeight}`,
         getNavigationMesh: () => null,
+        getBombMaxBlastDistance: () => 1000,
         getBuyArea: (forAttackers) => {
             const boxes = forAttackers ? buyAreaAttackers : buyAreaDefenders;
             return boxes ? { contains: (point) => containsAny(boxes, point) } : null;
@@ -82,15 +83,11 @@ function areaBoxes(area) {
 }
 
 function containsAny(boxes, point) {
+    const x = typeof point.getX === "function" ? point.getX() : point.x;
+    const y = typeof point.getY === "function" ? point.getY() : point.y;
+    const z = typeof point.getZ === "function" ? point.getZ() : point.z;
     for (const box of boxes) {
-        if (
-            point.getX() >= box.a[0] &&
-            point.getX() <= box.b[0] &&
-            point.getY() >= box.a[1] &&
-            point.getY() <= box.b[1] &&
-            point.getZ() >= box.a[2] &&
-            point.getZ() <= box.b[2]
-        ) {
+        if (x >= box.a[0] && x <= box.b[0] && y >= box.a[1] && y <= box.b[1] && z >= box.a[2] && z <= box.b[2]) {
             return true;
         }
     }
