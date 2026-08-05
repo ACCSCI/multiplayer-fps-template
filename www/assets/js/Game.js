@@ -26,6 +26,9 @@ export class Game {
     #sound;
     #inventory;
     #roundDamage = { did: {}, got: {} };
+    #interpPrev = null;
+    #interpNext = null;
+    #interpDelayMs = 100;
     score = null;
     bombDropPosition = null;
     alivePlayers = [0, 0];
@@ -332,6 +335,106 @@ export class Game {
 
         this.#render();
         this.#stats.end();
+    }
+
+    /**
+     * VibeHub 联机:P2P 快照(仅 players,~20Hz)应用。
+     * 与 tick() 的玩家部分相同,另存插值样本供 interpolate() 平滑渲染。
+     */
+    applySnapshot(players) {
+        if (this.#options === null) {
+            return;
+        }
+        this.#stats.begin();
+        this.#tick++;
+
+        const now = performance.now();
+        if (this.#interpNext !== null) {
+            this.#interpPrev = this.#interpNext;
+        }
+        this.#interpNext = { t: now, players };
+
+        players.forEach((serverState) => {
+            let player = this.players[serverState.id];
+            if (player === undefined) {
+                player = this.createPlayer(serverState);
+            }
+            this.updatePlayerData(player, serverState);
+        });
+
+        this.#render();
+        this.#stats.end();
+    }
+
+    /** VibeHub 联机:单个可靠事件(击杀/声音/回合等)即时应用 */
+    processEventData(event) {
+        if (this.#options === null) {
+            return;
+        }
+        this.#eventProcessor.process(event);
+    }
+
+    /**
+     * 渲染循环调用:在两个快照间插值玩家位姿(位置/视线/朝向)。
+     * 状态类变化(背包/金钱/镜)在快照到达时已应用,这里只做平滑。
+     */
+    interpolate(renderTime) {
+        const next = this.#interpNext;
+        if (next === null) {
+            return;
+        }
+        const prev = this.#interpPrev;
+        if (prev === null) {
+            this.#applyInterpolatedPositions(next.players, 1, null);
+            return;
+        }
+
+        const span = Math.max(1, next.t - prev.t);
+        let factor = (renderTime - this.#interpDelayMs - prev.t) / span;
+        factor = Math.min(1, Math.max(0, factor));
+        this.#applyInterpolatedPositions(next.players, factor, prev.players);
+    }
+
+    #applyInterpolatedPositions(nextPlayers, factor, prevPlayers) {
+        const prevById = new Map();
+        if (prevPlayers !== null) {
+            prevPlayers.forEach((player) => {
+                prevById.set(player.id, player);
+            });
+        }
+
+        nextPlayers.forEach((serverState) => {
+            const player = this.players[serverState.id];
+            if (player === undefined) {
+                return;
+            }
+            const prevState = prevById.get(serverState.id);
+            const object3D = player.get3DObject();
+
+            let x = serverState.position.x;
+            let y = serverState.position.y;
+            let z = serverState.position.z;
+            let sight = serverState.sight;
+            let horizontal = serverState.look.horizontal;
+            let vertical = serverState.look.vertical;
+
+            if (prevState !== undefined && factor > 0) {
+                x = Utils.lerp(prevState.position.x, x, factor);
+                y = Utils.lerp(prevState.position.y, y, factor);
+                z = Utils.lerp(prevState.position.z, z, factor);
+                sight = Utils.lerp(prevState.sight, sight, factor);
+                const delta = Utils.smallestDeltaAngle(prevState.look.horizontal, horizontal);
+                horizontal = prevState.look.horizontal + delta * factor;
+                vertical = Utils.lerp(prevState.look.vertical, vertical, factor);
+            }
+
+            object3D.position.set(x, y, -z);
+            object3D.getObjectByName("sight").position.y = sight;
+            if (this.playerMe.getId() !== serverState.id) {
+                object3D.rotation.y = Utils.serverHorizontalRotationToThreeRadian(horizontal);
+                object3D.getObjectByName("sight").rotation.x = Utils.serverVerticalRotationToThreeRadian(vertical);
+            }
+        });
     }
 
     updatePlayerData(player, serverState) {

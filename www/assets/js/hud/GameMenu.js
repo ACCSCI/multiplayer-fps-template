@@ -48,7 +48,12 @@ export class GameMenu {
 
         const json = setting.getJson();
         setting.loadSettings(json);
+        const savedAtMs = Date.now();
         window.localStorage.setItem("setting", json);
+        window.localStorage.setItem("setting-saved-at", String(savedAtMs));
+        if (window.vibeClient?.isLoggedIn()) {
+            window.vibeClient.saveSettings(json, savedAtMs);
+        }
     }
 
     show() {

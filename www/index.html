@@ -16,10 +16,11 @@
         <h2>F<span class="emojis">🏉💣</span>tball</h2>
     </header>
     <div id="menu">
-        <button type="button" onclick="gameUi.showModal('modal-join')">Play</button>
+        <button type="button" onclick="gameUi.startLobby()">Play</button>
         <button type="button" onclick="gameUi.showModal('modal-setting')">Settings</button>
         <button type="button" onclick="window.close()">Quit</button>
     </div>
+    <div id="lobby" class="hidden"></div>
     <div id="account">
         <span id="account-status">VibeHub: initializing...</span>
         <button id="account-login" type="button" class="hidden">Login</button>
@@ -31,15 +32,6 @@
     </footer>
 </div>
 <div id="modal" class="hidden">
-    <div data-name="modal-join" class="hidden">
-        <p class="text-warning">Currently, there is no official public server available, but you can run server yourself.</p>
-        <textarea id="join-url">ws://localhost:8081?map=default&code=acode</textarea>
-        <p class="flex">
-            <button type="button" onclick="gameUi.closeModal()" class="btn">× Close</button>
-            <span>&nbsp;</span>
-            <button type="button" onclick="gameUi.joinGameUrl(document.getElementById('join-url').value)" class="btn">↳ Join</button>
-        </p>
-    </div>
     <div data-name="modal-setting" class="hidden">
         <textarea rows="8" id="setting-form"></textarea>
         <p class="flex">
@@ -80,16 +72,20 @@
     const hud = document.getElementById('hud')
 
     window.gameUi = {
-        joinGameUrl(url) {
-            modal.remove()
-            ui.remove()
-
-            console.log("Launching game")
-            import("./assets/js/start.js").then(async (ns) => {
-                await ns.launchGame(document.body, hud, localStorage.getItem('setting'), url)
-            }).catch((error) => {
-                console.log(error)
-                alert(error)
+        startLobby() {
+            import("./assets/js/vibehub/Lobby.js").then(async (ns) => {
+                if (!window.vibeClient?.isLoggedIn()) {
+                    alert("Please login with VibeHub first")
+                    return
+                }
+                const lobby = new ns.Lobby(window.vibeClient, document.getElementById('lobby'), {
+                    onStart: async (room) => {
+                        lobby.hide()
+                        await launchMatch(room)
+                    },
+                })
+                window.__lobby = lobby
+                lobby.show()
             })
         },
         saveSetting(json) {
@@ -140,16 +136,7 @@
             if (!cloud?.setting) {
                 return
             }
-            const localRaw = localStorage.getItem('setting')
-            let localSavedAt = 0
-            if (localRaw) {
-                try {
-                    const local = JSON.parse(localRaw)
-                    localSavedAt = local.__savedAt ?? 0
-                } catch {
-                    // ignore malformed local settings
-                }
-            }
+            const localSavedAt = Number(localStorage.getItem('setting-saved-at') ?? 0)
             if (cloud.savedAt > localSavedAt) {
                 localStorage.setItem('setting', cloud.setting)
                 const form = document.getElementById('setting-form')
@@ -178,16 +165,34 @@
 </script>
 <script>
     document.addEventListener('contextmenu', (e) => e.preventDefault())
-    if (window.nodeApi) {
-        document.getElementById('join-url').value = 'udp://localhost:8080?map=default&code=acode'
-    } else {
-        window.addEventListener('beforeunload', (e) => {
+    window.addEventListener('beforeunload', (e) => {
+        if (window.__inMatch) {
             e.preventDefault();
-            return "Are you sure to leave this page?"
-        });
-    }
-    if (window.location.search === '?dev-join') {
-        window.gameUi.joinGameUrl(document.getElementById('join-url').value)
+            return "Leaving now ends the match for everyone."
+        }
+    })
+
+    async function launchMatch(room) {
+        ui.remove()
+        document.getElementById('lobby')?.remove()
+        window.__inMatch = true
+        console.log("Launching VibeHub game")
+        try {
+            const ns = await import("./assets/js/start.js")
+            await ns.launchVibeHubGame(document.body, hud, localStorage.getItem('setting'), {
+                room,
+                vibeClient: window.vibeClient,
+                onExit: (msg) => {
+                    alert(`Game ended: ${msg}`)
+                    window.location.reload()
+                },
+            })
+        } catch (error) {
+            console.error(error)
+            alert(error)
+            window.__inMatch = false
+            window.location.reload()
+        }
     }
 </script>
 </body>
