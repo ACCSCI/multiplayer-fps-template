@@ -1,0 +1,6 @@
+v0.1.0 — first VibeHub release
+
+- Online multiplayer over VibeHub P2P: host-authoritative simulation, 20Hz interpolated snapshots, reliable event channel
+- VibeHub login, cloud settings sync, personal stats and global leaderboard
+- Pathfinding bot AI fills teams (can be disabled later)
+- Full weapon/equipment/economy system ported from the original PHP server

@@ -1,0 +1,12 @@
+Counter-Strike: Football — 2v2 to 5v5 competitive FPS with VibeHub online multiplayer.
+
+Two football fan teams fight over the graffiti bomb: Attackers must plant it in the Defenders' sanctuary, Defenders must stop them and defuse. Win rounds to win the match.
+
+Features:
+- Full online multiplayer over VibeHub P2P: host-authoritative simulation in your browser, snapshot interpolation, reliable events (kills, plants, round flow), bots fill empty slots with pathfinding AI
+- VibeHub account: login, cloud-synced settings, personal stats (kills/deaths/wins), global leaderboard
+- CS-style economy: buy weapons and grenades each round (AK-47, M4A4, AWP, pistols, flash/smoke/molotov/HE/decoy, kevlar, defuse kit)
+- 3D world on three.js, pointer-lock controls, radar, buy menu, scoreboard, round damage feedback
+- Map: Dust-like default arena with plant sites and buy zones
+
+Play: login with your VibeHub account, create a room or quick match, invite friends by sharing the room id (password-protected rooms supported).
