@@ -27,6 +27,9 @@ jobs:
       - name: Build & test
         run: |
           bun install
+          echo "--- HEAD: $(git rev-parse HEAD)"
+          sha256sum www/assets/js/server/hit_box.js www/test/server/hit_geometry.test.js
+          bun test www/test/server/hit_geometry.test.js
           bun test
           bunx biome check .
           bun run scripts/check-lines.ts
