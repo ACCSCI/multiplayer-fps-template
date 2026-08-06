@@ -29,6 +29,16 @@ export class VibeHubClient {
         if (!window.VibeHub) {
             throw new Error("VibeHub SDK is not loaded (missing script tag)");
         }
+        // 失败后允许重试(如 SDK 脚本晚到或网络恢复)
+        try {
+            return await this.#initVibe();
+        } catch (error) {
+            this.#initPromise = null;
+            throw error;
+        }
+    }
+
+    async #initVibe() {
         console.log(`[VibeHub] SDK ${VibeHub.version} channel ${VibeHub.channel}`);
         const vibe = await VibeHub.init({ work: VIBEHUB_WORK });
         this.#vibe = vibe;

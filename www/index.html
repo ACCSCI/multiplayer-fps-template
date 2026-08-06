@@ -152,7 +152,8 @@
         .then(() => renderAuth())
         .catch((error) => {
             console.warn(`[VibeHub] init failed: ${error}`)
-            statusElement.textContent = 'VibeHub: unavailable'
+            statusElement.textContent = 'VibeHub: unavailable - click login to retry'
+            loginButton.classList.remove('hidden')
         })
     vibeClient.onAuthChange(() => renderAuth())
 
