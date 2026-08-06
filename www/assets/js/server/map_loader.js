@@ -8,7 +8,10 @@ import { PlaneBuilder } from "./plane_builder.js";
 import { Point } from "./point.js";
 import { Wall } from "./wall.js";
 
-const MAP_URL = "resources/map/default-map.json";
+// 用 import.meta.url 解析:Worker 上下文里相对 fetch 会相对 worker 脚本
+// 目录解析(assets/js/sim/),导致 404;绝对化后与主线程一致。
+// assets/js/server/ 向上三级才到 www/ 根,故用 ../../../resources/。
+const MAP_URL = new URL("../../../resources/map/default-map.json", import.meta.url).href;
 
 /** @type {?Promise<object>} */
 let cachedMapPromise = null;

@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/hud.css">
     <link rel="stylesheet" href="./assets/css/vibehub.css">
-    <script src="https://vibe.lumigrav.space/sdk/beta/vibehub.js"></script>
+    <!-- async:SDK 脚本不得阻塞页面渲染(否则 SDK 加载慢时首页黑屏) -->
+    <script src="https://vibe.lumigrav.space/sdk/beta/vibehub.js" async></script>
 </head>
 <body style="background:#000000">
 <div id="hud"><p style="font-size:120px;text-align:center;color:#FFF;padding:90px 40px">Loading....</p></div>

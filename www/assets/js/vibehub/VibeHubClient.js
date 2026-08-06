@@ -26,8 +26,13 @@ export class VibeHubClient {
     }
 
     async #doInit() {
-        if (!window.VibeHub) {
-            throw new Error("VibeHub SDK is not loaded (missing script tag)");
+        // SDK 脚本是 async 加载:轮询等待它就绪,期间页面 UI 已正常渲染
+        const deadline = Date.now() + 20000;
+        while (!window.VibeHub) {
+            if (Date.now() > deadline) {
+                throw new Error("VibeHub SDK is not loaded (missing script tag)");
+            }
+            await new Promise((resolve) => setTimeout(resolve, 250));
         }
         // 失败后允许重试(如 SDK 脚本晚到或网络恢复)
         try {

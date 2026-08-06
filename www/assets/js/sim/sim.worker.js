@@ -94,7 +94,9 @@ async function startGame(msg) {
     }
 
     host.onSnapshot((snap) => self.postMessage({ t: "snap", s: snap }));
-    host.onEvent((ev) => self.postMessage({ t: "ev", e: ev }));
+    // 事件对象含 onComplete 闭包,无法结构化克隆;发送序列化形态
+    // {code, data}(与 TextProtocol 线上格式一致,客户端 EventProcessor 直接消费)
+    host.onEvent((ev) => self.postMessage({ t: "ev", e: { code: ev.getCode(), data: ev.serialize() } }));
 
     for (const entry of msg.roster) {
         if (entry.isBot) {
