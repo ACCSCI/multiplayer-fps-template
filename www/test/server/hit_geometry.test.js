@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterAll, beforeAll, expect, test } from "bun:test";
 import { Box } from "../../assets/js/server/box.js";
 import { Bullet } from "../../assets/js/server/bullet.js";
 import { ArmorType, HitBoxType, ItemType } from "../../assets/js/server/enums.js";
@@ -17,6 +17,12 @@ import { movementXYZ, roundHalfAwayFromZero } from "../../assets/js/server/util.
 import { Wall } from "../../assets/js/server/wall.js";
 import { World } from "../../assets/js/server/world/index.js";
 import { MockPlayer, MockWeapon } from "./helpers/mocks.js";
+import { restoreDefaultSettings } from "./player_test_utils.js";
+
+// 测试文件之间可能共享模块状态(同 worker 顺序执行时),此处显式恢复
+// 全局 Setting/Util 默认值,保证本文件断言不依赖其他文件的执行顺序。
+beforeAll(restoreDefaultSettings);
+afterAll(restoreDefaultSettings);
 
 /** PHP assertPositionSame(new Point(x, y, z), point). */
 function expectPoint(point, x, y, z) {

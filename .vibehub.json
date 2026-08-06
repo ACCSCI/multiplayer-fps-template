@@ -1,9 +1,9 @@
 {
-  "schema": "vibehub-repository-v1",
-  "repositoryId": "1324618986",
-  "bindingId": "IPWtIGK9tKlMTCjBmnGYU",
-  "challenge": "PLV-ntLylTIhTcTl9xf7AD6z0GEXziYo",
-  "verification": "6359881548a303a3e4d2a42853c62c281ec69796e0cfb0ecf55f3faab176add3",
-  "collaborationTermsVersion": "2026-08-02",
-  "licenseFile": "VIBEHUB-COLLABORATION-LICENSE.md"
+    "schema": "vibehub-repository-v1",
+    "repositoryId": "1324618986",
+    "bindingId": "IPWtIGK9tKlMTCjBmnGYU",
+    "challenge": "PLV-ntLylTIhTcTl9xf7AD6z0GEXziYo",
+    "verification": "6359881548a303a3e4d2a42853c62c281ec69796e0cfb0ecf55f3faab176add3",
+    "collaborationTermsVersion": "2026-08-02",
+    "licenseFile": "VIBEHUB-COLLABORATION-LICENSE.md"
 }

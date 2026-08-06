@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterAll, beforeAll, expect, test } from "bun:test";
 import { Box } from "../../assets/js/server/box.js";
 import { Floor } from "../../assets/js/server/floor.js";
 import { NavigationMesh } from "../../assets/js/server/navigation_mesh.js";
@@ -7,27 +7,32 @@ import { Point } from "../../assets/js/server/point.js";
 import { loadConstants } from "../../assets/js/server/setting.js";
 import { Wall } from "../../assets/js/server/wall.js";
 import { World } from "../../assets/js/server/world/index.js";
+import { restoreDefaultSettings } from "./player_test_utils.js";
 
 // Ports test/og/World/NavigationMeshTest.php.
 // BaseTestCase::setUp() loads these constants (playerObstacleOvercomeHeight 20
 // matters for PathFinder; playerBoundingRadius 44 for the World tile check).
-loadConstants({
-    moveOneMs: 5,
-    moveWalkOneMs: 4,
-    moveCrouchOneMs: 3,
-    fallAmountOneMs: 6,
-    crouchDurationMs: 40,
-    jumpDurationMs: 50,
-    throwSpeed: 20,
-    playerVelocity: 0,
-    playerHeadRadius: 10,
-    playerBoundingRadius: 44,
-    playerJumpHeight: 150,
-    playerHeadHeightStand: 190,
-    playerHeadHeightCrouch: 140,
-    playerObstacleOvercomeHeight: 20,
-    playerFallDamageThreshold: 500,
+// beforeAll/afterAll 保证常量只在本文件生效,不污染同 worker 的其他测试文件。
+beforeAll(() => {
+    loadConstants({
+        moveOneMs: 5,
+        moveWalkOneMs: 4,
+        moveCrouchOneMs: 3,
+        fallAmountOneMs: 6,
+        crouchDurationMs: 40,
+        jumpDurationMs: 50,
+        throwSpeed: 20,
+        playerVelocity: 0,
+        playerHeadRadius: 10,
+        playerBoundingRadius: 44,
+        playerJumpHeight: 150,
+        playerHeadHeightStand: 190,
+        playerHeadHeightCrouch: 140,
+        playerObstacleOvercomeHeight: 20,
+        playerFallDamageThreshold: 500,
+    });
 });
+afterAll(restoreDefaultSettings);
 
 /** Minimal TestMap port: giant floor at y=0, two boundary walls, one navmesh start point. */
 class MockTestMap {
