@@ -27,10 +27,9 @@ jobs:
       - name: Build & test
         run: |
           bun install
-          echo "--- HEAD: $(git rev-parse HEAD)"
-          sha256sum www/assets/js/server/hit_box.js www/test/server/hit_geometry.test.js
-          bun test www/test/server/hit_geometry.test.js
-          bun test
+          # --parallel=<文件数>:每个测试文件独立 worker,避免同 worker 内
+          # 顺序执行时跨文件共享模块状态(settings 常量)导致的偶发失败
+          bun test --parallel=25
           bunx biome check .
           bun run scripts/check-lines.ts
 
